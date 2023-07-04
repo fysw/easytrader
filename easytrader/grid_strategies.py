@@ -122,13 +122,18 @@ class Copy(BaseStrategy):
                                                            class_name="Edit")
                         editor.select()
                         editor.type_keys(captcha_num)
-
                         self._trader.app.top_window().set_focus()
-                        pywinauto.keyboard.SendKeys("{ENTER}")  # 模拟发送enter，点击确定
+
+
+                        if self._trader.app.window(title='另存为').exists(timeout=1):
+                            found = True
+                            break
+                            logger.info(f"captcha result:{captcha_num} error")
                         # try:
                         #     logger.info(
                         #         self._trader.app.top_window()
-                        #             .window(control_id=0x966, class_name="Static")
+                        #             .window(control_id=0x966, class_name="Static") #验证码错误
+                        #             # .window(control_id=0x001, class_name="Static")
                         #             .window_text()
                         #     )
                         # except Exception as ex:  # 窗体消失
@@ -137,8 +142,10 @@ class Copy(BaseStrategy):
                         #     break
                     count -= 1
                     self._trader.wait(0.1)
+
                     self._trader.app.top_window().window(
-                        control_id=0x965, class_name="Static"
+                        control_id=0x965, class_name="Static"  # caption 空
+                        # control_id=0x001, class_name="Static"
                     ).click()
                     if (
                             self._trader.app.top_window().window(class_name="Static", title_re="验证码").exists(timeout=1)
@@ -213,6 +220,7 @@ class Xls(BaseStrategy):
         return self._format_grid_data(temp_path)
 
     def _format_grid_data(self, data: str) -> List[Dict]:
+        self._trader.wait(1)
         with open(data, encoding="gbk", errors="replace") as f:
             content = f.read()
 
