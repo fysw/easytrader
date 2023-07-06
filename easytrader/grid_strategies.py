@@ -143,14 +143,14 @@ class Copy(BaseStrategy):
                     count -= 1
                     self._trader.wait(0.1)
 
-                    self._trader.app.top_window().window(
-                        control_id=0x965, class_name="Static"  # caption 空
-                        # control_id=0x001, class_name="Static"
-                    ).click()
+                    # self._trader.app.top_window().window(
+                    #     control_id=0x965, class_name="Static"  # caption 空
+                    #     # control_id=0x001, class_name="Static"
+                    # ).click()
                     if (
                             self._trader.app.top_window().window(class_name="Static", title_re="验证码").exists(timeout=1)
                     ):
-                        pywinauto.keyboard.SendKeys("{ENTER}")  # 模拟发送enter，点击确定
+                        pywinauto.keyboard.send_keys("{ENTER}")  # 模拟发送enter，点击确定
                         break
                 if not found:
                     self._trader.app.top_window().Button2.click()  # 点击取消
